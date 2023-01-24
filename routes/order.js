@@ -9,7 +9,21 @@ router.get("/:id", async (req, res) => {
   const owner = req.params.id;
   console.log(owner);
   try {
-    const order = await Order.find({ owner: owner }).sort({ date: -1 });
+    const order = await Order.find({ owner: owner }).sort({ createdAt: -1 });
+    if (order) {
+      return res.status(200).send(order);
+    }
+    res.status(404).send("No orders found");
+  } catch (error) {
+    res.status(500).send();
+  }
+});
+
+router.get("/detail/:id", async (req, res) => {
+  const orderId = req.params.id;
+  console.log(orderId);
+  try {
+    const order = await Order.findOne({ _id: orderId }).sort({ createdAt: -1 });
     if (order) {
       return res.status(200).send(order);
     }
